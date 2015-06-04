@@ -1,0 +1,18 @@
+select
+	e.UID as EMPLOYEE_ID,
+	e.EMPLOYEE_NAME,
+	h.SECTION_NAME,
+	date_format(h.START_DATE, '%Y/%m/%d') as START_DATE
+from EMPLOYEES e
+inner join SECTION_HISTORIES h
+	on h.EMPLOYEE_ID = e.UID
+inner join SECTION_HISTORIES v
+	on v.EMPLOYEE_ID = h.EMPLOYEE_ID
+where
+	h.SECTION_NAME = 'IT'
+group by
+	h.EMPLOYEE_ID, h.START_DATE
+having
+	h.START_DATE = max(v.START_DATE)
+order by
+	e.UID asc;

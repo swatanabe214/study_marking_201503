@@ -1,0 +1,17 @@
+select
+	date_format(d.THE_DATE, '%Y-%m-%d') as DATE,
+	(select count(*) from USERS where d.THE_DATE = JOINED_DATE) as JOINED_COUNT,
+	(select count(*) from USERS where d.THE_DATE = LEFT_DATE) as LEFT_COUNT,
+	(select count(*) from USERS where d.THE_DATE >= JOINED_DATE) 
+	- (select count(*) from USERS where d.THE_DATE >= LEFT_DATE) as USER_COUNT
+from(
+	select JOINED_DATE as THE_DATE from USERS
+	where JOINED_DATE is not null
+	union all
+	select LEFT_DATE from USERS
+	where LEFT_DATE is not null 
+) d
+group by
+	d.THE_DATE
+order by
+	d.THE_DATE asc;
