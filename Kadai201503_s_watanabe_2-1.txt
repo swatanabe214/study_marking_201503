@@ -1,22 +1,22 @@
-select
-	e.UID as EVENT_ID,
-	e.EVENT_NAME,
-	s.UID as SCHEDULE_ID,
-	date_format(s.DUE_DATE, '%Y/%m/%d') as DUE_DATE
-from EVENTS e
-left join SCHEDULES s
-	on e.UID = s.EVENT_ID
-where s.UID is null
-	or s.UID = (
-		select ss.UID
-		from SCHEDULES ss
-		where ss.EVENT_ID = e.UID
-		and ss.DUE_DATE >= (SELECT max(SYSDATE) FROM DUMMY_SYSDATE)
-		order by
-		ss.DUE_DATE
-		limit 1
-	)
-order by
-	s.UID is null,
-	s.DUE_DATE,
-	e.UID;
+SELECT
+	e.uid AS event_id,
+	event_name,
+	MIN(s.uid) AS schedule_id,
+	date_format(MIN(due_date), '%Y/%m/%d') AS due_date
+FROM
+	events e
+LEFT JOIN
+	schedules s
+ON
+	e.uid = s.event_id
+WHERE
+	due_date >= (SELECT MAX(sysdate) FROM dummy_sysdate)
+OR
+	due_date IS NULL
+GROUP BY
+	e.uid,
+	event_name
+ORDER BY
+	s.event_id IS NULL,
+	MIN(due_date),
+	e.uid;
