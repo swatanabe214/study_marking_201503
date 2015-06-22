@@ -1,8 +1,8 @@
 SELECT
-	e.uid AS event_id,
-	event_name,
-	MIN(s.uid) AS schedule_id,
-	date_format(MIN(due_date), '%Y/%m/%d') AS due_date
+	e.uid AS EVENT_ID,
+	EVENT_NAME,
+	MIN(s.uid) AS SCHEDULE_ID,
+	DATE_FORMAT(MIN(due_date), '%Y/%m/%d') AS DUE_DATE
 FROM
 	events e
 LEFT JOIN

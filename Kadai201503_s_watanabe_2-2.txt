@@ -1,8 +1,8 @@
 SELECT
-	e.uid,
-	e.employee_name,
-	sh.section_name,
-	date_format(sh.start_date, '%Y/%m/%d') AS start_date
+	e.uid AS EMPLOYEE_ID,
+	e.EMPLOYEE_NAME,
+	sh.SECTION_NAME,
+	DATE_FORMAT(sh.start_date, '%Y/%m/%d') AS START_DATE
 FROM
 	employees e
 INNER JOIN
