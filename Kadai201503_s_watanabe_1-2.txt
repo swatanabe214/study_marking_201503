@@ -6,66 +6,64 @@ SELECT
 		SELECT
 			SUM(ref.j_count) - SUM(ref.l_count)
 		FROM
-		(
-			SELECT
-				joined_date AS ref_date,
-				1 AS j_count,
-				0 AS l_count
-			FROM
-				users
-			WHERE
-				joined_date IS NOT NULL
-			UNION ALL
-			SELECT
-				left_date AS date,
-				0 AS j_count,
-				1 AS l_count
-			FROM
-				users
-			WHERE
-				left_date IS NOT NULL
-		) ref
+			(
+				SELECT
+					joined_date AS ref_date,
+					1 AS j_count,
+					0 AS l_count
+				FROM
+					users
+				WHERE
+					joined_date IS NOT NULL
+				UNION ALL
+				SELECT
+					left_date AS date,
+					0 AS j_count,
+					1 AS l_count
+				FROM
+					users
+				WHERE
+					left_date IS NOT NULL
+			) ref
 		WHERE
 			d.date >= ref.ref_date
 	) AS user_count
 FROM
-(
-	SELECT
-		joined_date AS date
-	FROM
-		users
-	WHERE
-		joined_date IS NOT NULL
-	UNION SELECT
-		left_date AS date
-	FROM
-		users
-	WHERE
-		left_date IS NOT NULL
-) d
-LEFT JOIN
-(
-	SELECT
-		joined_date,
-		count(*) AS joined_count
-	FROM
-		users
-	GROUP BY
-		joined_date
-) j
-ON
-	d.date = j.joined_date
-LEFT JOIN
-(
-	SELECT
-		left_date,
-		count(*) AS left_count
-	FROM
-		users
-	GROUP BY
-		left_date
-) l
-ON
-	d.date = l.left_date
+	(
+		SELECT
+			joined_date AS date
+		FROM
+			users
+		WHERE
+			joined_date IS NOT NULL
+		UNION SELECT
+			left_date AS date
+		FROM
+			users
+		WHERE
+			left_date IS NOT NULL
+	) d
+	LEFT JOIN
+		(
+			SELECT
+				joined_date,
+				count(*) AS joined_count
+			FROM
+				users
+			GROUP BY
+				joined_date
+		) j
+	ON	d.date = j.joined_date
+	LEFT JOIN
+		(
+			SELECT
+				left_date,
+				count(*) AS left_count
+			FROM
+				users
+			GROUP BY
+				left_date
+		) l
+	ON	d.date = l.left_date
 ORDER BY
 	d.date;

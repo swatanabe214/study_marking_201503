@@ -5,14 +5,17 @@ SELECT
 	date_format(MIN(due_date), '%Y/%m/%d') AS due_date
 FROM
 	events e
-LEFT JOIN
-	schedules s
-ON
-	e.uid = s.event_id
+	LEFT JOIN
+		schedules s
+	ON	e.uid = s.event_id
 WHERE
-	due_date >= (SELECT MAX(sysdate) FROM dummy_sysdate)
-OR
-	due_date IS NULL
+	due_date >= (
+		SELECT
+			MAX(sysdate)
+		FROM
+			dummy_sysdate
+	)
+OR	due_date IS NULL
 GROUP BY
 	e.uid,
 	event_name

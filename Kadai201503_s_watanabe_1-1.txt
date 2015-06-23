@@ -3,43 +3,41 @@ SELECT
 	IFNULL(j.joined_count, 0) AS joined_count,
 	IFNULL(l.left_count, 0) AS left_count
 FROM
-(
-	SELECT
-		joined_date AS date
-	FROM
-		users
-	WHERE
-		joined_date IS NOT NULL
-	UNION SELECT
-		left_date AS date
-	FROM
-		users
-	WHERE
-		left_date IS NOT NULL
-) d
-LEFT JOIN
-(
-	SELECT
-		joined_date,
-		count(*) AS joined_count
-	FROM
-		users
-	GROUP BY
-		joined_date
-) j
-ON
-	d.date = j.joined_date
-LEFT JOIN
-(
-	SELECT
-		left_date,
-		count(*) AS left_count
-	FROM
-		users
-	GROUP BY
-		left_date
-) l
-ON
-	d.date = l.left_date
+	(
+		SELECT
+			joined_date AS date
+		FROM
+			users
+		WHERE
+			joined_date IS NOT NULL
+		UNION SELECT
+			left_date AS date
+		FROM
+			users
+		WHERE
+			left_date IS NOT NULL
+	) d
+	LEFT JOIN
+		(
+			SELECT
+				joined_date,
+				count(*) AS joined_count
+			FROM
+				users
+			GROUP BY
+				joined_date
+		) j
+	ON	d.date = j.joined_date
+	LEFT JOIN
+		(
+			SELECT
+				left_date,
+				count(*) AS left_count
+			FROM
+				users
+			GROUP BY
+				left_date
+		) l
+	ON	d.date = l.left_date
 ORDER BY
 	d.date;
