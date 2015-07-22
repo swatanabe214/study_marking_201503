@@ -13,8 +13,6 @@ SELECT
 				0 AS l_count
 			FROM
 				users
-			WHERE
-				joined_date IS NOT NULL
 			UNION ALL
 			SELECT
 				left_date AS date,
@@ -34,8 +32,6 @@ FROM
 		joined_date AS date
 	FROM
 		users
-	WHERE
-		joined_date IS NOT NULL
 	UNION SELECT
 		left_date AS date
 	FROM
