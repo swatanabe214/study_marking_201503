@@ -8,8 +8,6 @@ FROM
 		joined_date AS date
 	FROM
 		users
-	WHERE
-		joined_date IS NOT NULL
 	UNION SELECT
 		left_date AS date
 	FROM
