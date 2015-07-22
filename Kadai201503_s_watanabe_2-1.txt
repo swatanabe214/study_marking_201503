@@ -1,27 +1,4 @@
 SELECT
-<<<<<<< HEAD
-	e.uid AS event_id,
-	event_name,
-	MIN(s.uid) AS schedule_id,
-	date_format(MIN(due_date), '%Y/%m/%d') AS due_date
-FROM
-	events e
-LEFT JOIN
-	schedules s
-ON
-	e.uid = s.event_id
-WHERE
-	due_date >= (SELECT MAX(sysdate) FROM dummy_sysdate)
-OR
-	due_date IS NULL
-GROUP BY
-	e.uid,
-	event_name
-ORDER BY
-	s.event_id IS NULL,
-	MIN(due_date),
-	e.uid;
-=======
 	es.uid as EVENT_ID,
 	EVENT_NAME,
 	s.uid as SCHEDULE_ID,
@@ -77,4 +54,3 @@ ORDER BY
 	due_date IS NULL,
 	due_date,
 	event_id;
->>>>>>> refs/heads/branch_2015_10

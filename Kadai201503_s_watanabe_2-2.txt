@@ -1,18 +1,25 @@
-select
-	e.UID as EMPLOYEE_ID,
+SELECT
+	e.uid AS EMPLOYEE_ID,
 	e.EMPLOYEE_NAME,
-	h.SECTION_NAME,
-	date_format(h.START_DATE, '%Y/%m/%d') as START_DATE
-from EMPLOYEES e
-inner join SECTION_HISTORIES h
-	on h.EMPLOYEE_ID = e.UID
-inner join SECTION_HISTORIES v
-	on v.EMPLOYEE_ID = h.EMPLOYEE_ID
-where
-	h.SECTION_NAME = 'IT'
-group by
-	h.EMPLOYEE_ID, h.START_DATE
-having
-	h.START_DATE = max(v.START_DATE)
-order by
-	e.UID asc;
+	sh.SECTION_NAME,
+	DATE_FORMAT(sh.start_date, '%Y/%m/%d') AS START_DATE
+FROM
+	employees e
+INNER JOIN
+	section_histories sh
+ON
+	sh.employee_id = e.uid
+WHERE
+	sh.section_name = 'IT'
+AND
+	sh.start_date =
+	(
+		SELECT
+			MAX(sh2.start_date)
+		FROM
+			section_histories sh2
+		WHERE
+			sh.employee_id = sh2.employee_id
+	)
+ORDER BY
+	e.uid;

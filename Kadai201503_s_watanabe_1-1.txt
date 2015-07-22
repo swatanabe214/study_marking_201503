@@ -1,7 +1,7 @@
 SELECT
-	date_format(d.date, '%Y-%m-%d') AS date,
-	IFNULL(j.joined_count, 0) AS joined_count,
-	IFNULL(l.left_count, 0) AS left_count
+	DATE_FORMAT(d.date, '%Y-%m-%d') AS DATE,
+	IFNULL(j.joined_count, 0) AS JOINED_COUNT,
+	IFNULL(l.left_count, 0) AS LEFT_COUNT
 FROM
 (
 	SELECT
