@@ -1,25 +1,26 @@
-SELECT
-	e.uid AS EMPLOYEE_ID,
+select
+	e.UID as EMPLOYEE_ID,
 	e.EMPLOYEE_NAME,
-	sh.SECTION_NAME,
-	DATE_FORMAT(sh.start_date, '%Y/%m/%d') AS START_DATE
-FROM
-	employees e
-INNER JOIN
-	section_histories sh
-ON
-	sh.employee_id = e.uid
-WHERE
-	sh.section_name = 'IT'
-AND
-	sh.start_date =
+	h.SECTION_NAME,
+	date_format(currentData.maxStartDate, '%Y/%m/%d') as START_DATE
+from
 	(
 		SELECT
-			MAX(sh2.start_date)
+			employee_id,
+			MAX(start_date) AS maxStartDate
 		FROM
-			section_histories sh2
-		WHERE
-			sh.employee_id = sh2.employee_id
-	)
-ORDER BY
-	e.uid;
+			section_histories
+		GROUP BY
+			employee_id
+	) currentData
+	LEFT JOIN
+		section_histories h
+	ON	currentData.employee_id = h.EMPLOYEE_ID
+	AND	currentData.maxStartDate = h.START_DATE
+	LEFT JOIN
+		employees e
+	ON	currentData.employee_id = e.uid
+where
+	SECTION_NAME = 'IT'
+order by
+	EMPLOYEE_ID;
