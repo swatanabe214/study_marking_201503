@@ -1,4 +1,5 @@
 SELECT
+<<<<<<< HEAD
 	e.uid AS event_id,
 	event_name,
 	MIN(s.uid) AS schedule_id,
@@ -20,3 +21,60 @@ ORDER BY
 	s.event_id IS NULL,
 	MIN(due_date),
 	e.uid;
+=======
+	es.uid as EVENT_ID,
+	EVENT_NAME,
+	s.uid as SCHEDULE_ID,
+	DATE_FORMAT(s.due_date, '%Y/%m/%d') AS DUE_DATE
+FROM
+	(
+		SELECT
+			e.uid,
+			e.event_name,
+			MIN(s.due_date) as due_date
+		FROM
+			events e
+			LEFT JOIN
+				schedules s
+			ON  e.uid = s.event_id
+		WHERE
+			s.due_date IS NULL
+		OR
+			due_date >= (
+				SELECT
+					MAX(sysdate)
+				FROM
+					dummy_sysdate
+			)
+		GROUP BY
+			e.uid,
+			e.event_name
+	) es
+	LEFT JOIN
+		schedules s
+	ON	es.uid = s.event_id AND
+		es.due_date = s.due_date
+UNION
+(
+SELECT
+	e.uid AS event_id,
+	e.event_name AS event_name,
+	NULL AS schedule_id,
+	NULL AS due_date
+FROM
+	events e
+WHERE
+	NOT EXISTS(
+		SELECT
+			event_id
+		FROM
+			schedules
+		WHERE
+			e.uid = event_id
+	)
+)
+ORDER BY
+	due_date IS NULL,
+	due_date,
+	event_id;
+>>>>>>> refs/heads/branch_2015_10
